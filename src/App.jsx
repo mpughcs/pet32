@@ -23,19 +23,19 @@ function App() {
                 <h1 className="text-3xl font-bold text-center">Life gives</h1>
             </div>
             {/* pet details */}
-            <div className='absolute left-[200px]  bottom-[25%] flex flex-col gap-3 '>
+            {/* <div className='absolute left-[200px]  bottom-[25%] flex flex-col gap-3 '>
                 <h2 className="text-3xl  text-white">❤️ Ducky </h2>
                 <h2 className="text-3xl  text-white">🏥 Health: 100%</h2>
                 <h2 className="text-3xl font-bold text-white">🍔 Hunger: 100%</h2>
 
-            </div>
+            </div> */}
 
             <div id="app" className='mx-auto'>
                 <PhaserGame ref={phaserRef} />
                 <div className='flex align-middle items-center'>
                     <button onClick={addSprite} className='bg-green-500 text-white p-2 rounded-lg m-5 text-3xl'>Feed</button>
                     
-                    <HungerBar />
+                    {/* <HungerBar /> */}
 
                 </div>
             </div>
