@@ -1,11 +1,19 @@
 import { useRef } from 'react';
 import { PhaserGame } from './game/PhaserGame';
+import { useEffect } from 'react';
 import HealthBar from './HealthBar';
 import HungerBar from './HealthBar';
 
 function App() {
     const phaserRef = useRef();
 
+
+    useEffect(() => {
+        return () => {
+            console.log('App component unmounted');
+        };
+    }, []);
+    
     const addSprite = () => {
         const gameInstance = phaserRef.current.game; // Access the Phaser game instance
         const scene = gameInstance.scene.keys['Game']; // Access the specific 'Game' scene

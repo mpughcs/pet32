@@ -1,7 +1,16 @@
 import { Scene } from 'phaser';
 import { EventBus } from '../EventBus';
+import React from 'react';
+import { useEffect } from 'react';
+
+// food will be created by the firebase call from the esp32
+// hunger will be updated on duck collision with the food
+// if the user is not on the game screen, the hunger will be updated in the background firebase call
 
 export class Game extends Scene {
+
+
+    
     constructor() {
         super('Game');
         this.duckSpeed = 100; // Adjust speed as needed
@@ -30,14 +39,22 @@ export class Game extends Scene {
 
         // Add the duck sprite with physics
         this.duck = this.physics.add.sprite(400, 300, 'duckIdle');
-        // this.duck.setScale(.8); // Scale the sprite to fit
+
+        // Optionally scale the sprite (visually) 
+        // this.duck.setScale(0.8); 
+
+        // Set a smaller hitbox (setSize) but keep the sprite's visual size intact
+        this.duck.body.setSize(64, 64); // Adjust the width and height to make the hitbox smaller
+
+        // Optionally offset the hitbox (e.g., center it within the sprite)
+        this.duck.body.setOffset(32, 32); // Adjust offset if needed, based on your hitbox size
 
         // Create a walking animation
         this.anims.create({
-            key: 'walk', // The key to reference this animation
-            frames: this.anims.generateFrameNumbers('duckWalk', { start: 0, end: 8 }), // Adjust frame range based on your sprite sheet
-            frameRate: this.frameRate, // Speed of the animation
-            repeat: -1 // Loop the animation indefinitely
+            key: 'walk',
+            frames: this.anims.generateFrameNumbers('duckWalk', { start: 0, end: 8 }),
+            frameRate: this.frameRate,
+            repeat: -1
         });
 
         this.anims.create({
@@ -144,8 +161,18 @@ export class Game extends Scene {
             food = this.foodGroup.create(x, y, 'hotdog');
         }
 
-        // Optionally adjust the food size
-        food.setScale(0.7);
+        // Scale the food based on its Y position
+        this.scaleFoodBasedOnY(food, y);
+    }
+
+    scaleFoodBasedOnY(food, yPosition) {
+        const screenHeight = this.sys.game.config.height;
+        const minScale = 0.2;  // Smallest scale for food at the top
+        const maxScale = .8;  // Largest scale for food at the bottom
+
+        // Normalize Y position to a 0-1 range and interpolate between min and max scale
+        const scaleFactor = Phaser.Math.Interpolation.Linear([minScale, maxScale], yPosition / screenHeight);
+        food.setScale(scaleFactor);
     }
     update() {
         // Call the method to scale the duck based on its Y position
